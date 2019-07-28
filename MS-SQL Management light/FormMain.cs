@@ -101,6 +101,9 @@ namespace MS_SQL_Management_light
                 ucTree.Dock = DockStyle.Fill;
                 ucTree.NeueAbfrage_Click = new UserControlTree.OnNeueAbfrage_Click(this.NeueAbfrage_Click);
                 ucTree.SelectTop1000 = new UserControlTree.OnSelectTop1000(this.SelectTop1000);
+
+                ucTree.SelectTabGroes = new UserControlTree.OnSelectTabGroes(this.SelectTabGroes);
+
                 ucTree.Verbinden_Click = new UserControlTree.OnVerbinden_Click(this.FormConnectionOpen);
                 listEditor = new List<UserControlEditor>();
             } 
@@ -277,6 +280,15 @@ namespace MS_SQL_Management_light
         {
             toolStripButtonNeueAbfrage.PerformClick();
             listEditor[listEditor.Count - 1].SelectTop1000(tableName);
+        }
+
+        public void SelectTabGroes(string dbName)
+        {
+            if (Properties.Settings.Default.DataBaseText != dbName)
+                DbAccess.ChangeDBinConnectionString(dbName);
+            toolStripButtonNeueAbfrage.PerformClick();
+            listEditor[listEditor.Count - 1].SelectTabGroes();
+            
         }
 
         private void toolStripButtonDataiOffnen_Click(object sender, EventArgs e)

@@ -25,6 +25,8 @@ namespace MS_SQL_Management_light
             }
         }
 
+        
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             switch (keyData)
@@ -45,6 +47,16 @@ namespace MS_SQL_Management_light
                 this.SelectTop1000(table);
             }
         }
+        public delegate void OnSelectTabGroes(string dbName);
+        public OnSelectTabGroes SelectTabGroes;
+        public void CallSelectTabGroes(string dbName)
+        {
+            if(null!=this.SelectTabGroes)
+            {
+                this.SelectTabGroes(dbName);
+            }
+        }
+
         public delegate void OnVerbinden_Click();
         public OnVerbinden_Click Verbinden_Click;
         public void CallVerbinden_Click()
@@ -114,6 +126,7 @@ namespace MS_SQL_Management_light
         {
             AddContextMenu(NodeType.Folder, "Neue Datenbank", "toolStripMenuItemNewDB");
             AddContextMenu(NodeType.DB, "Neue Abfrage", "toolStripMenuItemNewQuery");
+            AddContextMenu(NodeType.DB, "Größe der Tabellen", "toolStripMenuItemTabGroes");
             AddContextMenu(NodeType.DB, "Drop Datenbank", "toolStripMenuItemDropDB");
             AddContextMenu(NodeType.DB, "Backup Datenbank", "toolStripMenuItemBackupDB");
             AddContextMenu(NodeType.DB, "Wiederherstellung Datenbank", "toolStripMenuItemRestoreDB");
@@ -148,6 +161,10 @@ namespace MS_SQL_Management_light
             {
                 backupRestoreDB(false);
             }
+            else if ((sender as ToolStripMenuItem).Name == "toolStripMenuItemTabGroes")
+            {
+                this.CallSelectTabGroes(treeViewStruct.SelectedNode.Text);
+            }
         }
 
         private void CreateNewDB()
@@ -176,6 +193,12 @@ namespace MS_SQL_Management_light
             FormBackupRestoreDB formBackupRestoreDB = new FormBackupRestoreDB(isBackup, treeViewStruct.SelectedNode.Text);
             formBackupRestoreDB.ObjectExplorerRefresh = new FormBackupRestoreDB.OnBackupRestoreDBErfolg(this.ObjectExplorerActualisieren);
             formBackupRestoreDB.ShowDialog();
+        }
+
+        private void tabGroes()
+        {
+            //FormTabGroes formTabGroes = new FormTabGroes(treeViewStruct.SelectedNode.Text);
+
         }
 
         private void addServerGroup(TreeNode treeNode)

@@ -96,6 +96,13 @@ namespace MS_SQL_Management_light
         {
             ExecSQL(DbAccess.BuldSelectTop1000Query(tableName));
         }
+
+        public void SelectTabGroes()
+        {
+            ExecSQL(DbAccess.BuldSelectTabGroes());
+            splitContainerMain.Panel1Collapsed = true;
+        }
+
         public void ExecSQL(string sqlText = "")
         {
             Stopwatch stopWatch = new Stopwatch();
