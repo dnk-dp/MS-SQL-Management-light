@@ -103,6 +103,56 @@ namespace MS_SQL_Management_light
             splitContainerMain.Panel1Collapsed = true;
         }
 
+        #region DataGridWievError
+        const int maxBinaryDisplayString = 8000;
+        private DataTable FixBinaryColumnsForDisplay(DataTable t)
+        {
+            List<string> binaryColumnNames = t.Columns.Cast<DataColumn>().Where(col => col.DataType.Equals(typeof(byte[]))).Select(col => col.ColumnName).ToList();
+            foreach (string binaryColumnName in binaryColumnNames)
+            {
+                // Create temporary column to copy over data
+                string tempColumnName = "C" + Guid.NewGuid().ToString();
+                t.Columns.Add(new DataColumn(tempColumnName, typeof(string)));
+                t.Columns[tempColumnName].SetOrdinal(t.Columns[binaryColumnName].Ordinal);
+
+                // Replace values in every row
+                StringBuilder hexBuilder = new StringBuilder(maxBinaryDisplayString * 2 + 2);
+                foreach (DataRow r in t.Rows)
+                {
+                    r[tempColumnName] = BinaryDataColumnToString(hexBuilder, r[binaryColumnName]);
+                }
+
+                t.Columns.Remove(binaryColumnName);
+                t.Columns[tempColumnName].ColumnName = binaryColumnName;
+            }
+            return t;
+        }
+
+        private string BinaryDataColumnToString(StringBuilder hexBuilder, object columnValue)
+        {
+            const string hexChars = "0123456789ABCDEF";
+            if (columnValue == DBNull.Value)
+            {
+                // Return special "(null)" value here for null column values
+                return "(null)";
+            }
+            else
+            {
+                // Otherwise return hex representation
+                byte[] byteArray = (byte[])columnValue;
+                int displayLength = (byteArray.Length > maxBinaryDisplayString) ? maxBinaryDisplayString : byteArray.Length;
+                hexBuilder.Length = 0;
+                hexBuilder.Append("0x");
+                for (int i = 0; i < displayLength; i++)
+                {
+                    hexBuilder.Append(hexChars[(int)byteArray[i] >> 4]);
+                    hexBuilder.Append(hexChars[(int)byteArray[i] % 0x10]);
+                }
+                return hexBuilder.ToString();
+            }
+        }
+        #endregion;
+
         public void ExecSQL(string sqlText = "")
         {
             Stopwatch stopWatch = new Stopwatch();
@@ -135,6 +185,10 @@ namespace MS_SQL_Management_light
             else
             {
                 DataGridView dgv = new DataGridView();
+
+
+                dtTable = FixBinaryColumnsForDisplay(dtTable);
+
                 dgv.DataSource = dtTable;
                 dgv.ReadOnly = true;
                 dgv.BackgroundColor = SystemColors.Window;

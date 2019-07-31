@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>MS_SQL_Management_light</RootNamespace>
     <AssemblyName>MS-SQL Management light</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -83,12 +83,6 @@
     <Compile Include="FormNewDB.Designer.cs">
       <DependentUpon>FormNewDB.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormDBGroes.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormDBGroes.Designer.cs">
-      <DependentUpon>FormDBGroes.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -136,9 +130,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormNewDB.resx">
       <DependentUpon>FormNewDB.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormDBGroes.resx">
-      <DependentUpon>FormDBGroes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
